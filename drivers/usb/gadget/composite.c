@@ -572,6 +572,7 @@ static u8 encode_bMaxPower(enum usb_device_speed speed,
 		val = CONFIG_USB_GADGET_VBUS_DRAW;
 	if (!val)
 		return 0;
+<<<<<<< HEAD
 	switch (speed) {
 	case USB_SPEED_SUPER:
 	case USB_SPEED_SUPER_PLUS:
@@ -580,6 +581,16 @@ static u8 encode_bMaxPower(enum usb_device_speed speed,
 		/* only SuperSpeed and faster support > 500mA */
 		return DIV_ROUND_UP(min(val, 500U), 2);
 	}
+=======
+	if (speed < USB_SPEED_SUPER)
+		return min(val, 500U) / 2;
+	else
+		/*
+		 * USB 3.x supports up to 900mA, but since 900 isn't divisible
+		 * by 8 the integral division will effectively cap to 896mA.
+		 */
+		return min(val, 900U) / 8;
+>>>>>>> v4.14.173
 }
 
 static int config_buf(struct usb_configuration *config,
@@ -980,7 +991,12 @@ static int set_config(struct usb_composite_dev *cdev,
 	power = c->MaxPower ? c->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
 	if (gadget->speed < USB_SPEED_SUPER)
 		power = min(power, 500U);
+<<<<<<< HEAD
 
+=======
+	else
+		power = min(power, 900U);
+>>>>>>> v4.14.173
 done:
 	usb_gadget_vbus_draw(gadget, power);
 	if (result >= 0 && cdev->delayed_status)
@@ -2426,9 +2442,13 @@ void composite_resume(struct usb_gadget *gadget)
 {
 	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
 	struct usb_function		*f;
+<<<<<<< HEAD
 	unsigned int			maxpower;
 	int				ret;
 	unsigned long			flags;
+=======
+	unsigned			maxpower;
+>>>>>>> v4.14.173
 
 	/* REVISIT:  should we have config level
 	 * suspend/resume callbacks?
@@ -2467,10 +2487,20 @@ void composite_resume(struct usb_gadget *gadget)
 				f->resume(f);
 		}
 
+<<<<<<< HEAD
 		maxpower = cdev->config->MaxPower;
 		maxpower = maxpower ? maxpower : CONFIG_USB_GADGET_VBUS_DRAW;
 		if (gadget->speed < USB_SPEED_SUPER)
 			maxpower = min(maxpower, 500U);
+=======
+		maxpower = cdev->config->MaxPower ?
+			cdev->config->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
+		if (gadget->speed < USB_SPEED_SUPER)
+			maxpower = min(maxpower, 500U);
+		else
+			maxpower = min(maxpower, 900U);
+
+>>>>>>> v4.14.173
 		usb_gadget_vbus_draw(gadget, maxpower);
 	}
 
