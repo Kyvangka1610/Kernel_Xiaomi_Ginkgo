@@ -565,8 +565,6 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
 	if (ret)
 		goto fail;
 
-<<<<<<< HEAD
-=======
 	if (!dev->dma_parms) {
 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
 					      GFP_KERNEL);
@@ -577,7 +575,6 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
 
 	msm_gem_shrinker_init(ddev);
 
->>>>>>> v4.14.173
 	switch (get_mdp_ver(pdev)) {
 	case KMS_MDP4:
 		kms = mdp4_kms_init(ddev);
