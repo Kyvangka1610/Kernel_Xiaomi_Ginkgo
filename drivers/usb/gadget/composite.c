@@ -2436,7 +2436,7 @@ void composite_resume(struct usb_gadget *gadget)
 	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
 	struct usb_function		*f;
 	unsigned int			maxpower;
-	int						ret;
+	int					ret;
 	unsigned long			flags;
 
 	/* REVISIT:  should we have config level
